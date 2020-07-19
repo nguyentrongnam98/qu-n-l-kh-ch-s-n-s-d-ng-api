@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+     <!-- Form tạo mới room hotel-->
+   <div class="container">
+    <br/>
+    <h2>Thêm mới phòng khách sạn</h2>
+    <div class="row">
+        <div class="col-6 offset-3">
+         <form  onsubmit="return addroom(this)">
+            <div class="form-group">
+                <label for="">ID Hotel</label>
+                <select name="hotel_id" class="form-control" >
+                   
+                </select>
+            </div>
+         <div class="form-group">
+             <label for="">Tên phòng</label>
+             <input type="text" name="room_name" class="form-control">
+         </div>
+         <div class="form-group">
+             <label for="">Số tầng</label>
+             <input type="text" name="floor" class="form-control">
+         </div>
+         <div class="form-group">
+             <label for="">Ảnh phòng</label>
+             <input type="text" name="image" class="form-control">
+         </div>
+         <div class="form-group">
+            <label for="">Giá phòng</label>
+            <input type="text" name="price" class="form-control">
+        </div>
+         <div class="text-center">
+             <button type="submit"class="btn btn-sm btn-primary">Lưu</button>&nbsp;
+             <a href="detail-hotel.html" class="btn btn-sm btn-danger">Huỷ</a>
+         </div>
+     </form>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+   
+
+
+   var apiHotel ='https://5f0b1beb5e512a00161c1be4.mockapi.io/hotel';
+   
+   axios.get(apiHotel)
+       .then(res=>{
+             if(res.statusText === 'OK'){
+                 var data = res.data;
+                 var content  = ``;
+                 data.forEach(element=>{
+                   content += `<option id = "hotels_${element.id}">${element.name}</option>`
+                 })
+                 document.querySelector('select[name="hotel_id"]').innerHTML = content;
+             }
+       })
+    function addroom(el){
+       var room_name = document.querySelector('[name="room_name"]').value;
+       var hotel_id = document.querySelector('select[name="hotel_id"]').value;
+       var image = document.querySelector('[name="image"]').value;
+       var price = document.querySelector('[name="price"]').value;
+       var floor = document.querySelector('[name="floor"]').value;
+       var Obj = {
+               room_name:room_name,
+               image:image,
+               price:price,
+               floor:floor,
+               hotelId:hotel_id
+           }
+           console.log(Obj)
+           var urlRoom = apiHotel + "/" + hotel_id  + "/rooms";
+           axios.post(urlRoom,Obj)
+           .then(data=>{
+               console.log(data)
+               if(res.statusText === 'Created'){
+                   window.location.href = "detail-hotel.html?="+hotel_id;
+               }
+           })
+        return false;
+    }
+</script>
+</body>
+</html>

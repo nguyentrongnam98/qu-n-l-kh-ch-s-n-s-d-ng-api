@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body onload="getEdit()">
+    <!-- Form tạo mới hotel-->
+   <div class="container">
+       <br/>
+       <h2>Cập nhật thông tin khách sạn</h2>
+       <div class="row">
+           <div class="col-6 offset-3">
+            <form  onsubmit="return editForm(this)">
+            <div class="form-group">
+                <label for="">Tên khách sạn</label>
+                <input type="text" name="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">Ảnh logo</label>
+                <input type="text" name="logo" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">Địa chỉ khách sạn</label>
+                <input type="text" name="Address" class="form-control">
+            </div>
+            <div class="text-center">
+                <button type="submit"class="btn btn-sm btn-primary">Lưu</button>&nbsp;
+                <a href="Hotel.html" class="btn btn-sm btn-danger">Huỷ</a>
+            </div>
+        </form>
+           </div>
+       </div>
+   </div>
+   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+   <script>
+       var api ='https://5f0b1beb5e512a00161c1be4.mockapi.io/Hotel';
+       var hotel = {}
+       var id = null;
+       function getEdit(){
+             // Lấy tham số id trên đường dẫn
+              var URL = new URLSearchParams(window.location.search)
+                id = URL.get('id')
+                var ApiUpdate = api + '/' +id;
+             // Gửi request lên mokAPI
+              axios.get(ApiUpdate)
+              .then(response=>{
+                  hotel = response.data;
+                  document.querySelector('[name="name"]').value = hotel.name;
+                  document.querySelector('[name="logo"]').value = hotel.logo;
+                  document.querySelector('[name="Address"]').value = hotel.Address;
+              })
+                     // Điền dữ liệu lấy đc vào trong form
+                  
+                 }
+       function editForm(){
+            var name = document.querySelector('[name="name"]').value;
+            var logo = document.querySelector('[name="logo"]').value;
+            var Address = document.querySelector('[name="Address"]').value;
+            hotel.name = name;
+            hotel.logo = logo;
+            hotel.Address = Address;
+            var apiU = api + '/' +id;
+            axios.put(apiU,hotel)
+            .then(response=>{
+                console.log(response)
+                if(response.statusText === 'OK'){
+                    window.location.href = 'Hotel.html'
+                }
+            })
+            return false;
+       }
+   </script>
+</body>
+</html>
